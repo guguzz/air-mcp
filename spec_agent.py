@@ -110,7 +110,7 @@ def generate_project_spec(payload):
                     "size": len(architecture)
                 },
                 "backlog": {
-                    "path": f"{output_dir}/30-backlog.yaml",
+                    "path": f"{output_dir}/30-backlog.md",
                     "content": backlog,
                     "size": len(backlog)
                 },
@@ -250,8 +250,8 @@ Frontend, Backend, Database, Infrastructure 등으로 분류하여 상세히 설
 
 
 def generate_backlog(bedrock, context, requirements):
-    """Generate backlog YAML"""
-    prompt = f"""다음 프로젝트의 백로그를 YAML 형식으로 작성해주세요:
+    """Generate backlog in Markdown format"""
+    prompt = f"""다음 프로젝트의 백로그를 Markdown 형식으로 작성해주세요:
 
 프로젝트 정보:
 {context}
@@ -259,30 +259,46 @@ def generate_backlog(bedrock, context, requirements):
 요구사항 (참고용):
 {requirements[:2000]}
 
-YAML 형식으로 다음 구조를 따라주세요:
+Markdown 형식으로 다음 구조를 따라주세요:
 
-projectName: "프로젝트 이름"
-sprints:
-  - id: "SPRINT-001"
-    name: "Sprint 1: 기반 구축"
-    startDate: "2025-10-15"
-    endDate: "2025-10-28"
-    items:
-      - id: "BACK-001"
-        title: "백로그 항목 제목"
-        description: "상세 설명"
-        type: "epic" # epic, story, task, bug 중 선택
-        priority: "high" # critical, high, medium, low 중 선택
-        status: "todo" # todo, in_progress, review, done 중 선택
-        estimatedHours: 40
-        tags: ["backend", "api"]
-        dependencies: []
-        acceptanceCriteria:
-          - "인수 기준 1"
-          - "인수 기준 2"
+# 프로젝트 백로그
+
+## 프로젝트: [프로젝트 이름]
+
+---
+
+## Sprint 1: 기반 구축
+**기간**: 2025-10-15 ~ 2025-10-28 (2주)
+
+### Epic: [Epic 제목] (EPIC-001)
+**우선순위**: High | **상태**: Todo | **예상**: 80h
+
+#### User Stories
+
+##### STORY-001: [스토리 제목]
+- **설명**: 스토리 상세 설명
+- **Type**: Story
+- **우선순위**: High
+- **상태**: Todo
+- **예상 시간**: 40h
+- **태그**: `backend`, `api`
+- **의존성**: 없음
+
+**인수 기준**:
+- [ ] 인수 기준 1
+- [ ] 인수 기준 2
+- [ ] 인수 기준 3
+
+**Tasks**:
+- [ ] **TASK-001**: Task 제목 (8h)
+- [ ] **TASK-002**: Task 제목 (16h)
+- [ ] **TASK-003**: Task 제목 (16h)
+
+---
 
 각 Sprint는 2주 분량의 작업으로 구성하고, 요구사항과 연계된 백로그 항목들을 생성해주세요.
-Epic → Story → Task 계층으로 구조화하고, 의존성 관계를 명시해주세요.
+Epic → User Story → Task 계층으로 구조화하고, 의존성 관계를 명시해주세요.
+체크박스 형식으로 작성하여 진행상황을 추적할 수 있게 해주세요.
 """
 
     return invoke_bedrock_claude(bedrock, prompt)
